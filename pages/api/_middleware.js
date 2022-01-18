@@ -1,5 +1,5 @@
-import { getToken } from "next-auth/jwt";
-import { NextResponse } from "next/server";
+import { getToken } from 'next-auth/jwt';
+import { NextResponse } from 'next/server';
 
 export async function middleware(req) {
 	/* Token exists if user logs in */
@@ -10,12 +10,12 @@ export async function middleware(req) {
 	1) its a request for next-auth session & provider fetching
 	2) the token exists */
 
-	if (pathname.includes("/api/auth") || token) {
+	if (pathname.includes('/api/auth') || token) {
 		return NextResponse.next();
 	}
 
 	// Redirect them to login if they don't have token and are requesting a protected route
-	if (!token && pathname !== "/login") {
-		return NextResponse.redirect("/login");
+	if (!token && pathname !== '/login') {
+		return NextResponse.redirect('/login');
 	}
 }

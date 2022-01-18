@@ -1,6 +1,6 @@
-import NextAuth from "next-auth";
-import SpotifyProvider from "next-auth/providers/spotify";
-import spotifyAPI, { LOGIN_URL } from "../../../lib/spotify";
+import NextAuth from 'next-auth';
+import SpotifyProvider from 'next-auth/providers/spotify';
+import spotifyAPI, { LOGIN_URL } from '../../../lib/spotify';
 
 /* Generate new access token */
 async function refreshAccessToken(token) {
@@ -10,8 +10,6 @@ async function refreshAccessToken(token) {
 
 		const { body: refreshedToken } = await spotifyAPI.refreshAccessToken(); // destructor the response
 
-		console.log("refreshed token is ", refreshedToken);
-
 		return {
 			...token,
 			accessToken: refreshedToken.access_token,
@@ -20,11 +18,11 @@ async function refreshAccessToken(token) {
 			refreshToken: refreshedToken.refresh_token ?? token.refreshToken,
 		};
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 
 		return {
 			...token,
-			error: "RefreshAccessTokenError",
+			error: 'RefreshAccessTokenError',
 		};
 	}
 }
@@ -43,7 +41,7 @@ export default NextAuth({
 	],
 	secret: process.env.JWT_SECRET,
 	pages: {
-		signIn: "/login",
+		signIn: '/login',
 	},
 	callbacks: {
 		/* spotify sends token back to app after logging in */
@@ -51,7 +49,6 @@ export default NextAuth({
 		async jwt({ token, account, user }) {
 			/* if inital sign in then it will return account and user variables */
 			if (account && user) {
-				console.log("New user identified...");
 				return {
 					...token,
 					accessToken: account.access_token, // this is a token given by Spotify
@@ -64,12 +61,12 @@ export default NextAuth({
 			/* return previous token if the access token has not expired yet */
 			if (Date.now() < token.accessTokenExpires) {
 				// if current time is less than the current access token then return the token
-				console.log("Exisiting token is valid");
+
 				return token;
 			}
 
 			/* access token has expired, need to generate new token */
-			console.log("Exisiting token is expired, generating...");
+
 			return await refreshAccessToken(token);
 		},
 

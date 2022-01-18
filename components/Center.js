@@ -34,7 +34,7 @@ function Center() {
 			.then((data) => {
 				setPlaylist(data.body);
 			})
-			.catch((err) => console.log('Something went wrong', err));
+			.catch((err) => console.error(err));
 	}, [spotifyAPI, playlistId]);
 
 	return (
